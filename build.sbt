@@ -9,7 +9,7 @@ ThisBuild / scalafmtOnCompile := true
 
 fork in run := true
 connectInput in run := true
-mainClass in Compile := Some("progfun.Main")
+mainClass in Compile := Some("projet.Main")
 
 lazy val root = (project in file("."))
   .settings(

@@ -4,12 +4,13 @@ import scala.math._
 
 object Orientations extends Enumeration {
   type Orientation = OrientationEnum
-  val North: OrientationEnum = OrientationEnum(90, Pi / 2)
-  val East: OrientationEnum = OrientationEnum(0, 0)
-  val South: OrientationEnum = OrientationEnum(270, (3 * Pi) / 2)
-  val West: OrientationEnum = OrientationEnum(180, Pi)
+  val North: OrientationEnum = OrientationEnum("N", 90, Pi / 2)
+  val East: OrientationEnum = OrientationEnum("E", 0, 0)
+  val South: OrientationEnum = OrientationEnum("S", 270, (3 * Pi) / 2)
+  val West: OrientationEnum = OrientationEnum("W", 180, Pi)
 
   protected case class OrientationEnum(
+      name: String,
       degAngle: Int,
       radAngle: Double
   ) extends super.Val {

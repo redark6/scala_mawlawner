@@ -2,9 +2,9 @@ package projet.`enum`
 
 object Movements extends Enumeration {
   type Movement = MovementEnum
-  val Forward: MovementEnum = MovementEnum(1)
+  val Forward: MovementEnum = MovementEnum("A", 1)
 
-  case class MovementEnum(shift: Int) extends super.Val
+  case class MovementEnum(name: String, shift: Int) extends super.Val
 
   def nameToMovement(name: Char): Option[Movement] = {
     name match {

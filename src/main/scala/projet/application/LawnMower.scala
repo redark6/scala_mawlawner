@@ -1,12 +1,6 @@
-package projet
-import projet.model.{
-  Action,
-  Lawn,
-  Movement,
-  Position,
-  Rotation,
-  SpatialOrientation
-}
+package projet.application
+
+import projet.model._
 
 import scala.annotation.tailrec
 import scala.math._
@@ -43,7 +37,6 @@ class LawnMower(spatialOrientationStart: SpatialOrientation, lawn: Lawn) {
     action match {
       case m: Movement => this.move(m, currentPosition)
       case r: Rotation => this.rotate(r, currentPosition)
-      case _           => currentPosition
     }
   }
 
@@ -60,21 +53,19 @@ class LawnMower(spatialOrientationStart: SpatialOrientation, lawn: Lawn) {
   }
 
   def isNextMovePossibleInLawn(nextPosition: Position): Boolean = {
-    (nextPosition.x >= 0) && (nextPosition.x <= this.lawn.widthBorder) &&
-    (nextPosition.y >= 0) && (nextPosition.y <= this.lawn.heightBorder)
+    lawn.isInsideLawn(nextPosition)
   }
 
   def computeNextMove(
       movement: Movement,
       currentPosition: SpatialOrientation
   ): SpatialOrientation = {
-    val movementAction = movement.movement
-    val orientation = currentPosition.orientation
-
+    val shift = movement.movement.shift
+    val radAngle = currentPosition.orientation.radAngle
     currentPosition.copy(
       position = currentPosition.position.moveOf(
-        round(cos(orientation.radAngle)).toInt * movementAction.shift,
-        round(sin(orientation.radAngle)).toInt * movementAction.shift
+        round(cos(radAngle)).toInt * shift,
+        round(sin(radAngle)).toInt * shift
       )
     )
   }
