@@ -27,7 +27,11 @@ class LawnMower(spatialOrientationStart: SpatialOrientation, lawn: Lawn) {
         case _ => previousSpatialOrientation
       }
     }
-    performActions(actions, spatialOrientationStart, List())
+    performActions(
+      actions,
+      spatialOrientationStart,
+      List(spatialOrientationStart)
+    )
   }
 
   def performAction(

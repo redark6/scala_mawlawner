@@ -1,7 +1,7 @@
 package projet.IO
 
 import better.files._
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
 import projet.`enum`.{Movements, Orientations, Rotations}
 import projet.application.LawnMower
 import projet.exception.DonneesIncorectesException
@@ -10,8 +10,7 @@ import projet.model._
 import scala.util.Try
 
 @SuppressWarnings(Array("org.wartremover.warts.Throw"))
-class FileParser {
-  val conf: Config = ConfigFactory.load()
+class FileParser(conf: Config) {
   val inputFilePath: String = conf.getString("appplication.input-file")
 
   def getFileLines: List[String] = {
@@ -71,7 +70,10 @@ class FileParser {
           case None =>
             Rotations.nameToRotation(v) match {
               case Some(rotation) => Some(Rotation(rotation))
-              case _              => throw DonneesIncorectesException("Action inconnue")
+              case _ =>
+                throw DonneesIncorectesException(
+                  s"Action inconnue: ${v.toString}"
+                )
             }
         }
       })
@@ -96,16 +98,17 @@ class FileParser {
       lawn: Lawn,
       position: String
   ): SpatialOrientation = {
-    position.toList.filter(_ != ' ') match {
+    val positionData = position.split(" ").toList
+    positionData match {
       case x :: y :: orientation :: Nil =>
         (
-          Try(x.asDigit).toOption,
-          Try(y.asDigit).toOption,
-          Orientations.nameToOrientation(orientation)
+          Try(x.toInt).toOption,
+          Try(y.toInt).toOption,
+          Orientations.nameToOrientation(orientation.charAt(0))
         ) match {
-          case (Some(x), Some(y), Some(orientation)) =>
-            if (lawn.isInsideLawn(Position(x, y))) {
-              SpatialOrientation(Position(x, y), orientation)
+          case (Some(xVal), Some(yVal), Some(orientationVal)) =>
+            if (lawn.isInsideLawn(Position(xVal, yVal))) {
+              SpatialOrientation(Position(xVal, yVal), orientationVal)
             } else {
               throw DonneesIncorectesException(
                 "La position de départ de la tondeuse est en dehors de la pelouse"
